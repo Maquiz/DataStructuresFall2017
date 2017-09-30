@@ -1,45 +1,31 @@
 // Maximilian Bolling  ID: xh9447
 // mbolling@horizon.csueastbay.edu
 #include <iostream>
-#include <iomanip>
-#include <fstream>
+#include <iomanip>  //Used for decimal precision
+#include <fstream>  //used to read from file
+#include <stdlib.h>  //Used for atoi
 using namespace std;
-//===================================Prototypes========================================
-double avg(int col[]);
-int high(int col[]);
-void conversion(string s, int c1[],int c2[],string inv[]);
+//===================================Prototypes================================================
+void conversion(string s,int& invc,int& c1c,int& c2c);
+void finisher(string s, int invc,int c1c, int c2c,int r);
+double avg(int col[],int length);
+int high(int col[],int length);
 void readInvalid(string s[]);
 bool stringCheck(string s);
+//==================================Main Loop==================================================
 int main()
 {
-    //================================Variables=========================================
+    //================================Variables================================================
     string name,data,line;
-    int col1[10],col2;
-    string invalid[10];
-    double avg1;
     bool correctname = false;
-    int currentInt = 0, highest2 =0, rows = 0, divisor = 0;
-
-    //=================================TEST ARRAYS======================================
-    int test [] = {7,8000,99999,11,100000};
-    string tests[] = {"asdasd", "blah", "goods"};
-    //How I can make dynamic arrays at runtime if i know the total
-    int* my_dynamic_array;
-
-    int size;
-    std::cin >> size;
-
-    my_dynamic_array = new int[size];
-
+    int  rows = 0, invcount = 0, c1count = 0, c2count = 0;
     //===================================Input=================================================
-    //While name is not correct
     while(!correctname){
         cout << "Please input the filename:" << endl;
         cin>> name;
 
         ifstream myfile (name.c_str());
         if(myfile.is_open()){
-
             while(getline(myfile,line)){
                 line = (line+"\n");
                 data += line ;
@@ -47,67 +33,121 @@ int main()
             }
             myfile.close();
             correctname = true;
-        }else{
-            cout<<"cant find"<<endl;
-            }
+        }
     }
-    //All of the data is now in the string Data
-
-    //if name is correct loop through rows of data
-    //if first col data is an int add to col1, add to avg1 and divisor++
-    //else add to invalid
-
-    //2nd col if int add to col2,
-    //if currentInt > highest2, highest2 = currentInt
-    //else add to invalid
-
-    //===================================Output=================================================
-    cout<<data<<endl;
-    //Avg C1
-    cout<<std::fixed;
-    cout<<"The average value of all numbers in the first column: "<<std::setprecision(4)<<avg(test)<<endl;;
-    //High C2
-    cout<<"The largest value of all numbers in the second column: "<<high(test)<<endl;
-    //Total Rows in file
-    cout<<"The total number of rows in the file is: "<<rows<<endl;
-    //Invalid numbers
-    readInvalid(tests);
-
-    cout<<stringCheck("12334512312")<<endl;
-    cout<<stringCheck("123345123i2")<<endl;
-
+    //===================================Output================================================
+    conversion(data,invcount,c1count, c2count);
+    finisher(data, invcount, c1count, c2count,rows);
     return 0;
 }
 
-//===================================Function Definitions========================================
+//===================================Function Definitions======================================
 
-//Potentially references to all arrays
-void conversion(string s,int c1[],int c2[],string inv[]){
-//while not at the end of string s
-//while(s)
-//grab first section up to ','
-//call stringCheck if true convert to int add to c1 else add to inv
+//count amount of ints for each column and invalid ints to creat array in finisher
+void conversion(string s,int& invc,int& c1c,int& c2c){//,int c1[],int c2[],string inv[]){
+    int it1 = 0,it2 = 0;
+    string stringTest;
+    bool test;
+    while(s.c_str()[it2]!=NULL){
+            stringTest == "";
+        if(s.c_str()[it2]==','){
+            stringTest = s.substr(it1,it2-it1);
+            test = stringCheck(stringTest);
+            if(test){
+                c1c++;
+            }else{
+                invc++;
+            }
+            it2++;
+            it1 = it2;
+        }else if(s.c_str()[it2]=='\n'){
+            stringTest = s.substr(it1,it2-it1);
+            test = stringCheck(stringTest);
+            if(test){
+                c2c++;
+            }else{
+                invc++;
+            }
+            it2++;
+            it1 = it2;
+        }
+        else{
+            it2++;
+        }
+    }
+}
 
-//grab next set of string to '/n'
-//Call stringCheck and if its true convert to int add to c2 else add to inv
+//Create arrays, fill with correct contents and display
+void finisher(string s, int invc,int c1c, int c2c,int r){
+    int* col1;
+    int* col2;
+    col1 = new int[c1c];
+    col2 = new int[c2c];
+    string* inv;
+    inv = new string[invc];
+    int nc1c = 0;
+    int nc2c = 0;
+    int ninvc = 0;
+    int it1 = 0,it2 = 0;
+    string stringTest;
+    bool test;
+    while(s.c_str()[it2]!=NULL){
+            stringTest == "";
+        if(s.c_str()[it2]==','){
+            stringTest = s.substr(it1,it2-it1);
+            test = stringCheck(stringTest);
+            if(test){
+                col1[nc1c] = atoi(stringTest.c_str());
+                nc1c++;
+            }else{
+                inv[ninvc] = stringTest;
+                ninvc++;
+            }
+            it2++;
+            it1 = it2;
+        }else if(s.c_str()[it2]=='\n'){
+            stringTest = s.substr(it1,it2-it1);
+            test = stringCheck(stringTest);
+            if(test){
+                col2[nc2c] = atoi(stringTest.c_str());
+                nc2c++;
+            }else{
+                inv[ninvc] = stringTest;
+                ninvc++;
+            }
+            it2++;
+            it1 = it2;
+        }
+        else{
+            it2++;
+        }
+    }
+    //Avg c1
+    cout<<std::fixed;
+    cout<<"The average value of all numbers in the first column: "<<std::setprecision(4)<<avg(col1,c1c)<<endl;
+    //High C2
+    cout<<"The largest value of all numbers in the second column: "<<high(col2,c2c)<<endl;\
+        //Total Rows in file
+    cout<<"The total number of rows in the file is: "<<r<<endl;
+        //Invalid numbers
+    readInvalid(inv);
 }
 
 //Average array of ints and returns double
-double avg(int col[]){
+double avg(int col[], int length){
     double sum = 0;
     double avger;
-    for(int i = 0; i<=
-     sizeof(col);i++){
+    for(int i = 0; i<length;i++){
         sum += col[i];
     }
-    avger = sum/sizeof(col);
+    avger = sum/length;
     return avger;
 }
 
 //Choose the high number from an array of ints
-int high(int col[]){
+int high(int col[], int length){
 int test = 0, cur = 0;
-    for(int i = 0;i<=sizeof(col);i++){
+    for(int i = 0;i<length;i++){
         cur = col[i];
         if(cur> test){
             test = cur;
@@ -142,3 +182,4 @@ bool stringCheck(string s){
     }
     return true;
 }
+
