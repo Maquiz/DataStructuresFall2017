@@ -23,8 +23,12 @@ int main()
     while(!correctname){
         cout << "Please input the filename:" << endl;
         cin>> name;
-
+        //If user does not add txt filename
+        if(name.c_str()[name.length()-4] != '.'){
+                name +=".txt";
+        }
         ifstream myfile (name.c_str());
+
         if(myfile.is_open()){
             while(getline(myfile,line)){
                 line = (line+"\n");
@@ -43,7 +47,7 @@ int main()
 
 //===================================Function Definitions======================================
 
-//count amount of ints for each column and invalid ints to creat array in finisher
+//count amount of ints for each column and invalid ints to create array in finisher
 void conversion(string s,int& invc,int& c1c,int& c2c){//,int c1[],int c2[],string inv[]){
     int it1 = 0,it2 = 0;
     string stringTest;
@@ -127,9 +131,9 @@ void finisher(string s, int invc,int c1c, int c2c,int r){
     cout<<"The average value of all numbers in the first column: "<<std::setprecision(4)<<avg(col1,c1c)<<endl;
     //High C2
     cout<<"The largest value of all numbers in the second column: "<<high(col2,c2c)<<endl;\
-        //Total Rows in file
+    //Total Rows in file
     cout<<"The total number of rows in the file is: "<<r<<endl;
-        //Invalid numbers
+    //Display Invalid numbers
     readInvalid(inv);
 }
 
