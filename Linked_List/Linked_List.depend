@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1507354548 source:c:\users\maxbo\onedrive\documents\github\datastructuresfall2017\linked_list\main.cpp
+	<iostream>
+	<fstream>
+	<stdlib.h>
+

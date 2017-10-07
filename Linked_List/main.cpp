@@ -1,7 +1,8 @@
 // Maximilian Bolling  ID: xh9447
 // mbolling@horizon.csueastbay.edu
 #include <iostream>
-#include <fstream>
+#include <fstream>   //used to read from file
+#include <stdlib.h>  //Used for atoi
 using namespace std;
 //===================================Class Definitions========================================
 //Create node class
@@ -25,6 +26,7 @@ public:
     int info;
     node *next;
 };
+
 //List class
 class LList{
 public:
@@ -135,18 +137,114 @@ public:
             it = it->next;
         }
         cout<<endl;
-        //TEST
-        //cout<<length<<endl;
-        //printHead();
-        //printTail();
-        //END TEST
     }
 
 private:
     int length;
     node *head, *tail;
 };
-
+void finisher(string s, LList l){
+    int it1 = 0,it2 = 0;
+    int fit1 = 0, fit2 = 0;
+    string stringTest;
+    //Append each int into a new node
+    while(s.c_str()[it2]!='\n'){
+            stringTest == "";
+        if(s.c_str()[it2]==','){
+            stringTest = s.substr(it1,it2-it1);
+            l.append(atoi(stringTest.c_str()));
+            it2++;
+            it1 = it2;
+        }
+        else{
+            it2++;
+        }
+    }
+    stringTest = s.substr(it1,it2-it1);
+    l.append(atoi(stringTest.c_str()));
+    it2++;
+    it1 = it2;
+    l.printAll();
+    //Delete numbers given
+    while(s.c_str()[it2]!='\n'){
+            stringTest == "";
+        if(s.c_str()[it2]==','){
+            stringTest = s.substr(it1,it2-it1);
+            l.deleteNode(atoi(stringTest.c_str()));
+            it2++;
+            it1 = it2;
+        }
+        else{
+            it2++;
+        }
+    }
+    stringTest = s.substr(it1,it2-it1);
+    l.deleteNode(atoi(stringTest.c_str()));
+    it2++;
+    it1 = it2;
+    l.printAll();
+    //Adding 2@3
+    string added = "",pos ="";
+    while(s.c_str()[it2]!=NULL){
+            stringTest == "";
+        if(s.c_str()[it2]==','){
+            stringTest = s.substr(it1,it2-it1);
+            while(stringTest.c_str()[fit2]!=NULL){
+                if(stringTest.c_str()[fit2]=='@'){
+                    added = stringTest.substr(fit1,fit2 - fit1);
+                    fit2++;
+                    fit1 = fit2;
+                    fit2++;
+                }else
+                    fit2++;
+            }
+            pos = stringTest.substr(fit1,fit2 -fit1);
+            if(pos =="END"){
+                l.add(atoi(added.c_str()),pos);
+                pos = "";
+                added = "";
+            }else{
+                l.add(atoi(added.c_str()),atoi(pos.c_str()));
+                pos = "";
+                added = "";
+            }
+            it2++;
+            it1 = it2;
+        }
+        else{
+            it2++;
+        }
+    }
+    stringTest == "";
+        if(s.c_str()[it2]==NULL){
+            stringTest = s.substr(it1,it2-it1);
+            while(stringTest.c_str()[fit2]!=NULL){
+                if(stringTest.c_str()[fit2]=='@'){
+                    added = stringTest.substr(fit1,fit2 - fit1);
+                    fit2++;
+                    fit1 = fit2;
+                    fit2++;
+                }else
+                    fit2++;
+            }
+            pos = stringTest.substr(fit1,fit2 -fit1);
+            if(pos =="END"){
+                l.add(atoi(added.c_str()),pos);
+                pos = "";
+                added = "";
+            }else{
+                l.add(atoi(added.c_str()),atoi(pos.c_str()));
+                pos = "";
+                added = "";
+            }
+            it2++;
+            it1 = it2;
+        }
+        else{
+            it2++;
+        }
+        l.printAll();
+}
 int main()
 {
     //================================Variables=========================================
@@ -162,31 +260,13 @@ int main()
                 data += line ;
 
             }
-            cout<<data<<endl;
+           // cout<<data<<endl;
             myfile.close();
         }else{
             cout<<"cant find"<<endl;
             }
-    //Create new node
-    node *p = new node(10);
-    p->next = new node(11);
-    //cout<<p->next->getValue()<<endl;
+
     LList linked;
-    linked.append(100);
-    linked.append(110);
-    linked.append(120);
-    linked.append(130);
-    linked.append(140);
-    linked.append(150);
-    linked.append(160);
-    linked.printAll();
-    linked.deleteNode(110);
-    linked.deleteNode(100);
-    linked.deleteNode(160);
-    linked.add(1000,0);
-    linked.add(999,3);
-    linked.add(1234,"END");
-    //linked.add(444,100);
-    //===================================Output=================================================
-    linked.printAll();
+    finisher(data,linked);
+
 }
