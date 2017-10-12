@@ -143,9 +143,13 @@ private:
     int length;
     node *head, *tail;
 };
+
+
+
 void finisher(string s, LList l){
     int it1 = 0,it2 = 0;
     int fit1 = 0, fit2 = 0;
+
     string stringTest;
     //Append each int into a new node
     while(s.c_str()[it2]!='\n'){
@@ -165,6 +169,7 @@ void finisher(string s, LList l){
     it2++;
     it1 = it2;
     l.printAll();
+
     //Delete numbers given
     while(s.c_str()[it2]!='\n'){
             stringTest == "";
@@ -183,24 +188,28 @@ void finisher(string s, LList l){
     it2++;
     it1 = it2;
     l.printAll();
+
     //Adding 2@3
     string added = "",pos ="";
     while(s.c_str()[it2]!=NULL){
-            stringTest == "";
+        stringTest == "";
         if(s.c_str()[it2]==','){
             stringTest = s.substr(it1,it2-it1);
+            fit1 = 0;  fit2 = 0;
             while(stringTest.c_str()[fit2]!=NULL){
                 if(stringTest.c_str()[fit2]=='@'){
                     added = stringTest.substr(fit1,fit2 - fit1);
                     fit2++;
                     fit1 = fit2;
-                    fit2++;
+                   // fit2++;
                 }else
                     fit2++;
             }
+
             pos = stringTest.substr(fit1,fit2 -fit1);
-            if(pos =="END"){
-                l.add(atoi(added.c_str()),pos);
+
+            if(pos.c_str()[0] == 'E'){
+                l.add(atoi(added.c_str()),"END");
                 pos = "";
                 added = "";
             }else{
@@ -208,6 +217,8 @@ void finisher(string s, LList l){
                 pos = "";
                 added = "";
             }
+
+            it2++;
             it2++;
             it1 = it2;
         }
@@ -215,9 +226,11 @@ void finisher(string s, LList l){
             it2++;
         }
     }
+
     stringTest == "";
         if(s.c_str()[it2]==NULL){
             stringTest = s.substr(it1,it2-it1);
+            fit1 = 0;  fit2 = 0;
             while(stringTest.c_str()[fit2]!=NULL){
                 if(stringTest.c_str()[fit2]=='@'){
                     added = stringTest.substr(fit1,fit2 - fit1);
@@ -228,14 +241,18 @@ void finisher(string s, LList l){
                     fit2++;
             }
             pos = stringTest.substr(fit1,fit2 -fit1);
-            if(pos =="END"){
-                l.add(atoi(added.c_str()),pos);
+
+            //not reading pos
+            if(pos.c_str()[0] == 'E'){
+                l.add(atoi(added.c_str()),"END");
+
                 pos = "";
                 added = "";
             }else{
                 l.add(atoi(added.c_str()),atoi(pos.c_str()));
                 pos = "";
                 added = "";
+
             }
             it2++;
             it1 = it2;
