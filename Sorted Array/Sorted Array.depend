@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1507787624 source:c:\users\maxbo\onedrive\documents\github\datastructuresfall2017\sorted array\main.cpp
+	<iostream>
+	<fstream>
+
