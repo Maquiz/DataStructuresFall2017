@@ -10,7 +10,7 @@ private:
     int sInt=0,rInt=0;
 
 public:
-    void printCard(){cout<<suit<<ranking<<endl;}
+    void printCard(){cout<<suit<<ranking;}
     void printCardInt(){cout<<sInt<<rInt<<endl;}
 
     //Constructors
@@ -27,17 +27,33 @@ public:
 
     //Returns True if card this is called from is greater than parameter card c
     bool ComparedTo(card c){
+        //if array rank > hand rank
         if(c.getRInt()>getRInt()){
             return false;
+            //if array rank < hand rank
         }else if(c.getRInt()<getRInt()){
            return true;
+            //if array rank == hand rank
         }else if(c.getRInt() == getRInt()){
+
             if(c.getSInt()>getSInt()){
                 return false;
             }else{
                 return true;
                 }
             }
+        }
+
+    //Returns True if card this is equal to parameter card c
+    bool EqualTo(card c){
+       if(c.getRInt() == getRInt()){
+            if(c.getSInt()==getSInt()){
+                return true;
+            }else{
+                return false;
+                }
+            }
+            return false;
         }
 
      //Converts string values of Suit and Ranking into int values SInt and RInt
@@ -81,10 +97,10 @@ public:
 };
 
 //===================================Prototypes================================================
-void putItem(card d[], card c, int length); //insert card into deck in ascending order
-void deleteItem(card d[], card c, int length); //delete card from deck
+void putItem(card d[], card c, int &length); //insert card into deck in ascending order
+void deleteItem(card d[], card c, int &length); //delete card from deck
 void getItem(card d[], card c, int length); //test if card is in deck
-void printDeck(card d[]);   //print all cards in deck
+void printDeck(card d[],int length);   //print all cards in deck
 
 
 //==================================Main Loop==================================================
@@ -93,7 +109,9 @@ int main()
     //================================Variables================================================
     card* deck;
     deck = new card[20];
-    string data,line;
+    card* holdDeck;
+    holdDeck = new card[20];
+    string data,line, cardinfo, suit, ranks;
     int it1 = 0, it2 = 0;
     int length = 0;
     string name = "DataFile.txt";
@@ -110,84 +128,161 @@ int main()
         cout<<"cant find"<<endl;
         }
 
-    //1st 20 items = inputCards1 ;
-    for(int i = 0;i<20;i++){
-            //if(){
-          //  }
+    //Input initial 20 items
+    for(int i = 0; i<20; i++){
+        cardinfo = "";
+        suit = "";
+        ranks = "";
+        //Find first ,
+        while(data.c_str()[it2]!=','){
+            it2++;
+        }
+
+        //Grab Entire Card
+        cardinfo = data.substr(it1,it2-it1);
+        //Set Suit
+        suit = data.substr(it1,1);
+
+        ranks = data.substr(it1+1,it2-(it1+1));
+
+        holdDeck[i].setSuit(suit);
+        holdDeck[i].setRank(ranks);
+        holdDeck[i].convert(suit,ranks);
+        putItem(deck,holdDeck[i],length);
+
+        it2++;
+        it1 = it2;
     }
-    // Go to nextline = delete cards
-    // go to next line = inputcards2
-    //go to next line = testCards;
+    printDeck(deck,length);
 
-    //================================TESTING AREA=============================================
-    deck[0]= card("H","2");
-    deck[1]= card("D","8");
-    deck[2]= card("S","A");
-    deck[3]= card("C","7");
-    deck[4]= card("D","J");
-    printDeck(deck);
-    cout<<"Print Deck Test^^^^^"<<endl<<endl;
+    //Move to next Line
+    while(data.c_str()[it2]!='\n'){
+            it2++;
+        }
+        it2++;
+        it1 = it2;
+        //start of 2nd line
+        /*
+        while(data.c_str()[it2]!='\n'){
+            while(data.c_str()[it2]!=','){
+                it2++;
+            }
+            //Grab Entire Card
+            cardinfo = data.substr(it1,it2-it1);
+            //Set Suit
+            suit = data.substr(it1,1);
 
-    card g("H","10");
+            ranks = data.substr(it1+1,it2-(it1+1));
+            /*
+            card c(suit,ranks);
+            c.convert(suit,ranks);
 
-    card a("C","2");
-    card t("C","10");
-    card b("S","10");
-    card c("D","A");
-    g.printCard();
-    g.printCardInt();
-    cout<<"Should return 1: "<<g.ComparedTo(a)<<endl;
-    cout<<"Should return 1: "<<g.ComparedTo(t)<<endl;
-    cout<<"Should return 0: "<<g.ComparedTo(b)<<endl;
-    cout<<"Should return 0: "<<g.ComparedTo(c)<<endl;
+            deleteItem(deck,c,length);
+
+        //cout<<cardinfo<<endl;
+            it2++;
+            it1 = it2;
+        }
+        it2++;
+        it1 = it2;
+*/
+        //Hard Coding Cards
+        card a ("H","4");
+        card b ("D","5");
+        card c ("H","K");
+        card d ("D","2");
+
+        //Proving Delete function works
+        deleteItem(deck,a,length);
+        deleteItem(deck,b,length);
+        deleteItem(deck,c,length);
+        deleteItem(deck,d,length);
+
+        printDeck(deck,length);
+
+        //Hard Coding put more items
+        card e ("S","7");
+        card f ("H","K");
+        card g ("D","10");
+
+        putItem(deck,e,length);
+        putItem(deck,f,length);
+        putItem(deck,g,length);
+
+        printDeck(deck,length);
+
+        //Hard coded Cards
+        card h("C","9");
+
+        card i("C","10");
+
+        //Proof Get Item function works
+        getItem(deck,h,length);
+        cout<<",";
+        getItem(deck,i,length);
+
 
     //========================!!!!!!!!!!END OF FUNTION!!!!!!!!=================================
     return 0;
 }
 //===================================Function Definitions======================================
 
-void putItem(card d[], card c, int length){
-    int l = length;
+//Length is not being saved globally
+void putItem(card d[], card c, int &length){
+    bool moreToSearch;
     int pos = 0;
-    while(pos<=l){
-        //card is larger than the one in the deck
-        if(c.ComparedTo(d[pos])){
-            pos++;
-        }else{
-            //put card at pos move all other objects down one spot starting at bottom
+
+    moreToSearch = (pos<length);
+        while(moreToSearch){
+            //card is larger than the one in the deck
+            if(c.ComparedTo(d[pos])){
+                pos++;
+                moreToSearch = (pos<length);
+            }else{
+                //else is never being called
+               moreToSearch = false;
+            }
         }
+        for(int index = length; index > pos; index--)
+            d[index] = d[index-1];
+        d[pos] = c;
+        length++;
+}
+
+void deleteItem(card d[], card c, int &length){
+    int pos = 0;
+
+    while(!c.EqualTo(d[pos]))
+        pos++;
+
+    if(c.EqualTo(d[pos])){
+        for(int index = pos + 1; length > index;index++)
+            d[index -1] = d[index];
+        length--;
     }
 }
 
-void printDeck(card d[]){
-    int it = 0;
-    while(d[it].getSuit() != "NULL"){
+void getItem(card d[], card c, int length){
+    int pos = 0;
+    bool moreToSearch = (pos<length);
+    while(moreToSearch){
+        if(c.EqualTo(d[pos])){
+            cout<<c.getSuit()<<c.getRank()<<" YES";
+            return;
+        }
+        pos++;
+        moreToSearch = (pos<length);
+
+    }
+
+        cout<<c.getSuit()<<c.getRank()<<" NO";
+}
+
+void printDeck(card d[],int length){
+    for(int it = 0; it<length; it++){
         d[it].printCard();
-        it++;
+        if(it<length-1)
+            cout<<",";
     }
+    cout<<endl;
 }
-//Returns position of the same  item;
-/*
-int compareTo(int t[],int j){
-    int pos = 0;
-    if(t[pos]==NULL){
-        return pos;
-    }
-    while(t[pos]<j && t[pos]!= NULL){
-        pos++;
-    }
-    return pos;
-}
-int compareTo(int t[], string j){
-
-}
-
-bool doesExist(int t[], int j){
-    int pos = 0;
-    while(t[pos]!= NULL){
-        if(t[pos]==j){
-            return true;
-        }
-        pos++;
-    } return false;
-}*/
