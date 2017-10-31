@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1509432507 source:c:\users\maxbo\onedrive\documents\github\datastructuresfall2017\dll alphabet\main.cpp
+	<iostream>
+	<fstream>
+	<stdlib.h>
+
